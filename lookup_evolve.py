@@ -24,6 +24,7 @@ import copy
 from multiprocessing import Pool
 
 import axelrod_utils
+import spatial_utils
 
 def evolve(starting_tables, mutation_rate, generations, bottleneck, pool, plys, start_plys, starting_pop, output_file):
     """
@@ -84,7 +85,7 @@ def evolve(starting_tables, mutation_rate, generations, bottleneck, pool, plys, 
 
             # map the population to get a list of (score, table) tuples
             # this list will be sorted by score, best tables first
-            results = axelrod_utils.score_tables(population, pool)
+            results = spatial_utils.score_tables(population, pool)
 
             # keep the user informed
             print("generation " + str(generation))
