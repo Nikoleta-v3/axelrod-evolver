@@ -29,7 +29,7 @@ def evolve(starting_tables, mutation_rate, generations, bottleneck, pool, plys, 
     """
     The function that does everything. Take a set of starting tables, and in each generation:
     - add a bunch more random tables
-    - simulate recombination between each pair of tables 
+    - simulate recombination between each pair of tables
     - randomly mutate the current population of tables
     - calculate the fitness function i.e. the average score per turn
     - keep the best individuals and discard the rest
@@ -63,13 +63,13 @@ def evolve(starting_tables, mutation_rate, generations, bottleneck, pool, plys, 
                     # for reproduction, pick a random crossover point
                     crossover = random.randrange(len(t1.items()))
 
-                    # the values (plays) for the offspring are copied from t1 up to the crossover point, 
+                    # the values (plays) for the offspring are copied from t1 up to the crossover point,
                     # and from t2 from the crossover point to the end
-                    new_values = copy.deepcopy(t1.values()[0:crossover]) + copy.deepcopy(t2.values()[crossover:])
+                    new_values = copy.deepcopy(list(t1.values())[0:crossover]) + copy.deepcopy(list(t2.values())[crossover:])
 
                     # turn those new values into a valid lookup table by copying the keys from t1 (the keys are the same for
                     # all tables, so it doesn't matter which one we pick)
-                    new_table = dict(zip(copy.deepcopy(t1.keys()), new_values))
+                    new_table = dict(zip(copy.deepcopy(list(t1.keys())), new_values))
                     copies.append(new_table)
 
             # now copies contains a list of the new offspring tables, do mutation
@@ -127,8 +127,8 @@ def get_random_tables(plys, opponent_start_plys, number):
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='Lookup Evolver 0.1')
 
-    # set up the process pool 
-    pool = Pool(processes=int(arguments['-i'])) 
+    # set up the process pool
+    pool = Pool(processes=int(arguments['-i']))
 
     # vars for the genetic algorithm
     starting_pop = int(arguments['-k'])
