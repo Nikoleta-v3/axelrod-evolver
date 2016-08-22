@@ -23,7 +23,6 @@ import random
 import copy
 from multiprocessing import Pool
 
-import axelrod_utils
 import spatial_utils
 
 def evolve(starting_tables, mutation_rate, generations, bottleneck, pool, plys, start_plys, starting_pop, output_file):
@@ -97,7 +96,7 @@ def evolve(starting_tables, mutation_rate, generations, bottleneck, pool, plys, 
             scores = [score for score, table in results]
 
             # write the generation number, identifier of current best table, score of current best table, mean score, and SD of scores to the output file
-            for value in [generation, axelrod_utils.id_for_table(results[0][1]), results[0][0], axelrod_utils.mean(scores), axelrod_utils.pstdev(scores)]:
+            for value in [generation, spatial_utils.id_for_table(results[0][1]), results[0][0], spatial_utils.mean(scores), spatial_utils.pstdev(scores)]:
                 output.write(str(value) + ",")
             output.write("\n")
 
@@ -142,7 +141,7 @@ if __name__ == '__main__':
     # generate a starting population of tables and score them
     # these will start off the first generation
     starting_tables = get_random_tables(plys, start_plys, starting_pop)
-    real_starting_tables = axelrod_utils.score_tables(starting_tables, pool)
+    real_starting_tables = spatial_utils.score_tables(starting_tables, pool)
 
     # kick off the evolve function
     evolve(real_starting_tables, mutation_rate, generations, bottleneck, pool, plys, start_plys, starting_pop, arguments['-o'])
