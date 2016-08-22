@@ -38,7 +38,7 @@ def ranks_for(my_strategy_factory, iterations=200, max_size=3,
             edges = G.edges()
 
             tournament = axelrod.SpatialTournament(sample_strategies, edges=edges)
-            results = tournament.play(processes=0)
+            results = tournament.play()
 
             ranks.append(results.ranking[-1])
     eval_rank = eval_function(ranks)
