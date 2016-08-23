@@ -4,7 +4,7 @@ import networkx as nx
 import numpy
 import random
 
-import axelrod_utils
+from axelrod_utils import *
 
 strategies = [s() for s in axelrod.strategies]
 
@@ -59,4 +59,4 @@ def score_tables(tables, pool):
     """Use a multiprocessing Pool to take a bunch of tables and score them,
        based on ranks
     """
-    return sorted(pool.map(do_table, tables), reverse=True)
+    return sorted(pool.map(do_table, tables), key=lambda x: x[0], reverse=True)
