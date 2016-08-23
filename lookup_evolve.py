@@ -133,13 +133,16 @@ if __name__ == '__main__':
     # vars for the genetic algorithm
     starting_pop = int(arguments['-k'])
     mutation_rate = float(arguments['-u'])
-    generations = int(arguments['-g'])
+    generations = 3
+    #int(arguments['-g'])
     bottleneck = int(arguments['-b'])
     plys = int(arguments['-p'])
     start_plys = int(arguments['-s'])
 
     # generate a starting population of tables and score them
     # these will start off the first generation
+    # seed everything
+    random.seed(0)
     starting_tables = get_random_tables(plys, start_plys, starting_pop)
     real_starting_tables = spatial_utils.score_tables(starting_tables, pool)
 
