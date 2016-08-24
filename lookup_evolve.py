@@ -20,6 +20,8 @@ from __future__ import division
 from docopt import docopt
 import itertools
 import random
+import csv
+import os.path
 import copy
 from multiprocessing import Pool
 
@@ -36,6 +38,9 @@ def evolve(starting_tables, mutation_rate, generations, bottleneck, pool, plys, 
     - write out summary statistics to the output file
 
     """
+
+
+
 
     # current_bests is a list of 2-tuples, each of which consists of a score and a lookup table
     # initially the collection of best tables are the ones supplied to start with
@@ -127,24 +132,45 @@ def get_random_tables(plys, opponent_start_plys, number):
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='Lookup Evolver 0.1')
 
+    # set the output file
+    output_file = 'binomial_median_evolve.csv'
+
+    file_exists = os.path.isfile(output_file)
+
     # set up the process pool
     pool = Pool(processes=int(arguments['-i']))
 
     # vars for the genetic algorithm
     starting_pop = int(arguments['-k'])
     mutation_rate = float(arguments['-u'])
-    generations = 3
+    generations = 2
     #int(arguments['-g'])
     bottleneck = int(arguments['-b'])
     plys = int(arguments['-p'])
     start_plys = int(arguments['-s'])
 
-    # generate a starting population of tables and score them
-    # these will start off the first generation
-    # seed everything
-    random.seed(0)
-    starting_tables = get_random_tables(plys, start_plys, starting_pop)
-    real_starting_tables = spatial_utils.score_tables(starting_tables, pool)
+    # get starting population
+    # if the first time the genetic algorithm is performed
+    if not file_exists:
+        # generate a starting population of tables and score them
+        # these will start off the first generation
+        # seed everything
+        random.seed(0)
+        starting_tables = get_random_tables(plys, start_plys, starting_pop)
+        real_starting_tables = spatial_utils.score_tables(starting_tables, pool)
+    # if not, read the previous output
+    else :
+        tables = []
+        with open(output_file) as f:
+            reader = csv.reader(f)
+            # re-id the table
+            for row in reader:
+                strings = [''.join(x) for x in itertools.product('CD', repeat=2)]
+                keys = list(itertools.product(strings,strings, strings))
+                values = row[1]
+                tables.append(tuple((row[2],dict(zip(keys, values)))))
+        real_starting_tables = tables
 
+    print(real_starting_tables)
     # kick off the evolve function
-    evolve(real_starting_tables, mutation_rate, generations, bottleneck, pool, plys, start_plys, starting_pop, arguments['-o'])
+    # evolve(real_starting_tables, mutation_rate, generations, bottleneck, pool, plys, start_plys, starting_pop, output_file)
