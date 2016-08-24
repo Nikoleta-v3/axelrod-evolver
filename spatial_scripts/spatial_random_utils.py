@@ -135,7 +135,7 @@ def score_tables_min_random(tables, pool):
     """Use a multiprocessing Pool to take a bunch of tables and score them,
        based on ranks
     """
-    return sorted(pool.map(do_table_median_random, tables),key=lambda x: x[0], reverse=True)
+    return sorted(pool.map(do_table_min_random, tables),key=lambda x: x[0], reverse=True)
 
 # For evaluation function is max rank
 def ranks_for_max_random(my_strategy_factory, iterations=200, max_size=50,
@@ -191,11 +191,11 @@ def do_table_max_random(table):
     on ranks
     """
     fac = lambda: axelrod.LookerUp(lookup_table=table)
-    return(ranks_for_median_random(fac), table)
+    return(ranks_for_max_random(fac), table)
 
 
 def score_tables_max_random(tables, pool):
     """Use a multiprocessing Pool to take a bunch of tables and score them,
        based on ranks
     """
-    return sorted(pool.map(do_table_median_random, tables),key=lambda x: x[0], reverse=True)
+    return sorted(pool.map(do_table_max_random, tables),key=lambda x: x[0], reverse=True)
