@@ -11,8 +11,9 @@ strategies = [s() for s in axelrod.strategies]
 
 # SCORING FUNCTION SPATIAL
 
-def ranks_for(my_strategy_factory, max_size, topology,
-              eval_function,ub_parameter=1, strategies=strategies, repetitions=1):
+def ranks_for(my_strategy_factory, max_size, min_size, topology, eval_function,
+              turns = 200, repetitions=10, max_graph_attempt=10, ub_parameter=10,
+                                parameter_repetitions=3, strategies=strategies):
     """
     Given a function that will return a strategy, calculate the evaluation
     function for the strategy after participating in various spatial tournament.
@@ -22,41 +23,56 @@ def ranks_for(my_strategy_factory, max_size, topology,
     """
 
     sample_size = random.randint(min_size, max_size)
-    sample_size = 10
-
     sample_strategies = random.sample(strategies, sample_size)
     sample_strategies.append(my_strategy_factory())
     ranks =[]
     for parameter in range(1, ub_parameter + 1):
 
         p = parameter/ub_parameter
+        for _ in range(parameter_repetitions):
+            ranking = False
+            graph_seed = 0
+            graph_attempt_count = 0
+            while (ranking is False):  # repeating until having connected graph
+                G = define_topology(topology, sample_strategies, p, graph_seed)
 
-        print(p)
-        ranking = False
-        graph_seed = 0
-        while not ranking:  # repeating until having connected graph
+                # check that all nodes are connected
+                connections = [len(c) for c in sorted(nx.connected_components(G),
+                                                         key=len, reverse=True)]
 
-            G = define_topology(topology, sample_strategies, p, graph_seed)
-            # check that all nodes are connected
-            connections = [len(c) for c in sorted(nx.connected_components(G), key=len,
-                                                                                           reverse=True)]
-            print(connections)
-            if connections and (1 not in connections) :
-                print(1)
-                edges = G.edges()
+                if connections and (1 not in connections) :
+                    edges = G.edges()
+                    ranking = rank_strategy(sample_strategies, edges, turns,
+                                                                    repetitions)
+                else:
+                    graph_seed += 1
+                    graph_attempt_count += 1
+                    if graph_attempt_count > max_graph_attempt:
+                        raise ValueError("No valid graphs were found after {} attempts".format(graph_attempt_count))
 
-                tournament = axelrod.SpatialTournament(sample_strategies, edges=edges, turns=5, repetitions=repetitions)
-                results = tournament.play()
-                ranking = results.ranking[-1]
-            else:
-                graph_seed += 1
-        ranks.append(ranking)
+            ranks.append(ranking)
 
     eval_rank = eval_function(ranks)
     return eval_rank
 
 
+def rank_strategy(sample_strategies, edges, turns, repetitions):
+    """
+    A function that performs a spatial tournament and returns the LookerUp's
+    rank in that tournament
+    """
+    tournament = axelrod.SpatialTournament(sample_strategies, edges=edges,
+                                           turns=turns, repetitions=repetitions)
+    results = tournament.play()
+    return(results.ranking[-1])
+
+
 def define_topology(topology, sample_strategies, p, graph_seed):
+    """
+    A function that returns a graph, based on the topology argument. The graph
+    can be a binomial, a watts strogatz graph, a complete or any of the
+    aforementioned.
+    """
     # set seeds for graphs
     axelrod.seed(graph_seed)
 
@@ -93,10 +109,11 @@ def do_table(table, parameters):
     on ranks
     """
     max_size = parameters[0]
-    eval_function = parameters[1]
-    topology = parameters[2]
+    min_size = parameters[1]
+    eval_function = parameters[2]
+    topology = parameters[3]
     fac = lambda: axelrod.LookerUp(lookup_table=table)
-    return(ranks_for(my_strategy_factory=fac, max_size=max_size,
+    return(ranks_for(my_strategy_factory=fac, max_size=max_size, min_size=min_size,
                      eval_function=eval_function,topology=topology), table)
 
 def score_tables(tables, pool, parameters):
