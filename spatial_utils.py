@@ -55,7 +55,6 @@ def ranks_for(my_strategy_factory, max_size, min_size, topology, eval_function,
     eval_rank = eval_function(ranks)/sample_size #between 0 and 1
     return eval_rank
 
-
 def rank_strategy(sample_strategies, edges, turns, repetitions):
     """
     A function that performs a spatial tournament and returns the LookerUp's
@@ -65,7 +64,6 @@ def rank_strategy(sample_strategies, edges, turns, repetitions):
                                            turns=turns, repetitions=repetitions)
     results = tournament.play()
     return(results.ranking[-1])
-
 
 def define_topology(topology, sample_strategies, p, graph_seed):
     """
@@ -100,7 +98,6 @@ def define_topology(topology, sample_strategies, p, graph_seed):
             G = nx.watts_strogatz_graph(len(sample_strategies),
                                                           initial_neighborhood_size, p)
     return(G)
-
 
 def do_table(table, parameters):
     """
