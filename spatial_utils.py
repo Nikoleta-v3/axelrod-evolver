@@ -12,7 +12,7 @@ strategies = [s() for s in axelrod.strategies]
 # SCORING FUNCTION SPATIAL
 
 def ranks_for(my_strategy_factory, max_size, min_size, topology, eval_function,
-              turns = 200, repetitions=10, max_graph_attempt=10, ub_parameter=10,
+              turns = 200, repetitions=16, max_graph_attempt=500, ub_parameter=10,
                                 parameter_repetitions=3, strategies=strategies):
     """
     Given a function that will return a strategy, calculate the evaluation
@@ -52,7 +52,7 @@ def ranks_for(my_strategy_factory, max_size, min_size, topology, eval_function,
 
             ranks.append(ranking)
 
-    eval_rank = eval_function(ranks)
+    eval_rank = eval_function(ranks)/sample_size #between 0 and 1
     return eval_rank
 
 
