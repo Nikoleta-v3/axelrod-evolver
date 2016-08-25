@@ -14,12 +14,10 @@ Options:
     -b BOTTLENECK           number of individuals to keep from each generation [default: 10]
     -i PROCESSORS           number of processors to use [default: 1]
     -o OUTPUT_FILE          file to write statistics to [default: evolve.csv]
-    -e EVALUATION_FUNCTION  the evalution function for table [default: argv[1]]
-    -m MAX_SIZE             maximum size of tournament [default: argv[2]]
-    -n MIN_SIZE             minimum size of tournament [default: argv[3]]
-    -t TOPOLOGY             the spatial topology [default: argv[4]]
-
-
+    -e EVALUATION_FUNCTION  the evalution function for table 
+    -m MAX_SIZE             maximum size of tournament 
+    -n MIN_SIZE             minimum size of tournament 
+    -t TOPOLOGY             the spatial topology 
 """
 from __future__ import division
 from docopt import docopt
