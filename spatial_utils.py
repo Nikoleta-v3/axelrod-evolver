@@ -21,7 +21,8 @@ def ranks_for(my_strategy_factory, max_size, topology,
     and a complete graph.
     """
 
-    sample_size = random.randint(1, max_size)
+    sample_size = random.randint(min_size, max_size)
+    sample_size = 10
 
     sample_strategies = random.sample(strategies, sample_size)
     sample_strategies.append(my_strategy_factory())
@@ -29,11 +30,13 @@ def ranks_for(my_strategy_factory, max_size, topology,
     for parameter in range(1, ub_parameter + 1):
 
         p = parameter/ub_parameter
+
         print(p)
         ranking = False
+        graph_seed = 0
         while not ranking:  # repeating until having connected graph
 
-            G = define_topology(topology, sample_strategies, p, parameter)
+            G = define_topology(topology, sample_strategies, p, graph_seed)
             # check that all nodes are connected
             connections = [len(c) for c in sorted(nx.connected_components(G), key=len,
                                                                                            reverse=True)]
@@ -45,15 +48,17 @@ def ranks_for(my_strategy_factory, max_size, topology,
                 tournament = axelrod.SpatialTournament(sample_strategies, edges=edges, turns=5, repetitions=repetitions)
                 results = tournament.play()
                 ranking = results.ranking[-1]
+            else:
+                graph_seed += 1
         ranks.append(ranking)
 
     eval_rank = eval_function(ranks)
     return eval_rank
 
 
-def define_topology(topology, sample_strategies, p, parameter):
+def define_topology(topology, sample_strategies, p, graph_seed):
     # set seeds for graphs
-    axelrod.seed(parameter)
+    axelrod.seed(graph_seed)
 
     if topology == 'binomial':
         G = nx.binomial_graph(len(sample_strategies), p)
