@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -q workq
+#PBS -N complete_min_long_size
+#PBS -P PR350
+#PBS -o complete_min_long_stdout.txt
+#PBS -e complete_min_long_stderr.txt
+#PBS -l select=1:ncpus=16:mpiprocs=16
+#PBS -l place=scatter:excl
+#PBS -l walltime=70:00:00
+
+#PROJECT=PR350
+
+export MPLBACKEND="agg"
+# Run a genetic algorithm for a complete topology, with a bigger tournament size,
+# 15 to 50. The evaluation function is based on the min rank
+cd /home/c1569433/src/axelrod-evolver
+~/anaconda3/bin/python lookup_evovle.py minimum -m 50 -n  15 -t  complete

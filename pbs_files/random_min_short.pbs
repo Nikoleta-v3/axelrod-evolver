@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -q workq
+#PBS -N random_min_short_size
+#PBS -P PR350
+#PBS -o random_median_short_stdout.txt
+#PBS -e random_median_short_stderr.txt
+#PBS -l select=1:ncpus=16:mpiprocs=16
+#PBS -l place=scatter:excl
+#PBS -l walltime=70:00:00
+
+#PROJECT=PR350
+
+export MPLBACKEND="agg"
+# Run a genetic algorithm for a random topology, with a small tournament size,
+# 10 to 15. The evaluation function is based on the min rank
+cd /home/c1569433/src/axelrod-evolver
+~/anaconda3/bin/python lookup_evovle.py minimum -m 15 -n  10 -t  random
