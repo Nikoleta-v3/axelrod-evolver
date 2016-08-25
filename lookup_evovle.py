@@ -14,10 +14,10 @@ Options:
     -b BOTTLENECK           number of individuals to keep from each generation [default: 10]
     -i PROCESSORS           number of processors to use [default: 1]
     -o OUTPUT_FILE          file to write statistics to [default: evolve.csv]
-    -e EVALUATION_FUNCTION  the evalution function for table 
-    -m MAX_SIZE             maximum size of tournament 
-    -n MIN_SIZE             minimum size of tournament 
-    -t TOPOLOGY             the spatial topology 
+    -e EVALUATION_FUNCTION  the evalution function for table
+    -m MAX_SIZE             maximum size of tournament
+    -n MIN_SIZE             minimum size of tournament
+    -t TOPOLOGY             the spatial topology
 """
 from __future__ import division
 from docopt import docopt
@@ -127,7 +127,6 @@ def evolve(starting_tables, mutation_rate, generations, bottleneck, pool, plys,
 
     return (current_bests)
 
-
 def get_random_tables(plys, opponent_start_plys, number):
     """Return randomly-generated lookup tables"""
 
@@ -155,8 +154,8 @@ if __name__ == '__main__':
     arguments = docopt(__doc__, version='Lookup Evolver 0.1')
 
     # set the output file
-    output_file = '{}_{}_evolve.csv'.format(arguments['-t'], arguments['-e'])
-    #/scratch/c1569433/data/
+    output_file = '/scratch/c1569433/data/{}_{}_evolve.csv'.format(arguments['-t'], arguments['-e'])
+
     file_exists = os.path.isfile(output_file)
 
     # set evaluation function and tournament maximum size
