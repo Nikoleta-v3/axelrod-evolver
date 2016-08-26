@@ -1,0 +1,19 @@
+#!/bin/bash
+#PBS -q workq
+#PBS -N deterministic_small
+#PBS -P PR350
+#PBS -o deterministic_small_stdout.txt
+#PBS -e deterministic_small_stderr.txt
+#PBS -l select=1:ncpus=16:mpiprocs=16
+#PBS -l place=scatter:excl
+#PBS -l walltime=70:00:00
+
+#PROJECT=PR350
+
+export MPLBACKEND="agg"
+# Run a genetic algorithm for a small topology, with only the basic strategies
+of axelrod library. The evaluation function is based on the median rank
+cd /home/c1569433/src/axelrod-evolver
+~/anaconda3/bin/python lookup_evovle.py -e median -m 10 -n  5 -t  small -k 2 -b 2 -x 1 -r 1
+
+
