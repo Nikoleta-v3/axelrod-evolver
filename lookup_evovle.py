@@ -2,7 +2,9 @@
 
 Usage:
     lookup_evolve.py [-h] [-e EVALUATION_FUNCTION] [-m  MAX_SIZE] [-n MIN_SIZE] [-t TOPOLOGY]
-    [-p PLIES] [-s STARTING_PLIES] [-g GENERATIONS] [-k STARTING_POPULATION] [-u MUTATION_RATE] [-b BOTTLENECK] [-i PROCESSORS] [-o OUTPUT_FILE]
+    [-w UP_BOUND_PARAMETER] [-r REPETITIONS] [-x SET_STRATEGIES]
+    [-p PLIES] [-s STARTING_PLIES] [-g GENERATIONS] [-k STARTING_POPULATION] [-u MUTATION_RATE]
+    [-b BOTTLENECK] [-i PROCESSORS] [-o OUTPUT_FILE]
 
 Options:
     -h --help               show this
@@ -14,10 +16,13 @@ Options:
     -b BOTTLENECK           number of individuals to keep from each generation [default: 10]
     -i PROCESSORS           number of processors to use [default: 1]
     -o OUTPUT_FILE          file to write statistics to [default: evolve.csv]
-    -e EVALUATION_FUNCTION  the evalution function for table
+    -e EVALUATION_FUNCTION  the evaluation function for table
     -m MAX_SIZE             maximum size of tournament
     -n MIN_SIZE             minimum size of tournament
     -t TOPOLOGY             the spatial topology
+    -w UP_BOUND_PARAMETER  the upper bound parameter for graph generator [default: 4]
+    -r REPETITIONS          the repetitions of each tournament [default: 5]
+    -x SET_STRATEGIES          strategies for tournament [default: 0]
 """
 from __future__ import division
 from docopt import docopt
@@ -154,8 +159,11 @@ if __name__ == '__main__':
     arguments = docopt(__doc__, version='Lookup Evolver 0.1')
 
     # set the output file
-    output_file = '/scratch/c1569433/data/{}_{}_{}_evolve.csv'.format(arguments['-t'], arguments['-e'], arguments['-m'])
-
+    output_file = '{}_{}_{}_{}_evolve.csv'.format(
+                                                                arguments['-t'],
+                                                                arguments['-e'],
+                                                                arguments['-m'],
+                                                                arguments['-x'])
     file_exists = os.path.isfile(output_file)
 
     # set evaluation function and tournament maximum size
@@ -169,8 +177,11 @@ if __name__ == '__main__':
     max_size = int(arguments['-m'])
     min_size = int(arguments['-n'])
     topology = arguments['-t']
-    parameters = [max_size, min_size, eval_function, topology]
-
+    ub_parameter = int(arguments['-w'])
+    repetitions = int(arguments['-r'])
+    set_strategies = int(arguments['-x'])
+    parameters = [max_size, min_size, eval_function, topology, ub_parameter,
+                  repetitions, set_strategies]
     # set up the process pool
     pool = Pool(processes=int(arguments['-i']))
 
@@ -194,7 +205,7 @@ if __name__ == '__main__':
         real_starting_tables = spatial_utils.score_tables(starting_tables,
                                                                pool, parameters)
     # if not, read the previous output
-    else :
+    else:
         tables = []
         with open(output_file) as f:
             reader = csv.reader(f)
@@ -209,4 +220,4 @@ if __name__ == '__main__':
 
     # kick off the evolve function
     evolve(real_starting_tables, mutation_rate, generations, bottleneck, pool,
-                        plys, start_plys, starting_pop, output_file, parameters)
+           plys, start_plys, starting_pop, output_file, parameters)
