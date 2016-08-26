@@ -14,4 +14,4 @@ export MPLBACKEND="agg"
 # Run a genetic algorithm for a random topology, with a bigger tournament size,
 # 15 to 50. The evaluation function is based on the min rank
 cd /home/c1569433/src/axelrod-evolver
-~/anaconda3/bin/python lookup_evovle.py -e minimum -m 50 -n  15 -t  random
+~/anaconda3/bin/python lookup_evovle.py -e minimum -m 50 -n  15 -t  random -k 2 -b 2

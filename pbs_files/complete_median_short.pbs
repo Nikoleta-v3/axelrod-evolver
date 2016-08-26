@@ -14,5 +14,5 @@ export MPLBACKEND="agg"
 # Run a genetic algorithm for a complete topology, with a small tournament size,
 # 10 to 15. The evaluation function is based on the median rank
 cd /home/c1569433/src/axelrod-evolver
-~/anaconda3/bin/python lookup_evovle.py -e median -m 15 -n  10 -t  complete -k 2 -b 2
+~/anaconda3/bin/python lookup_evovle.py -e median -m 15 -n  10 -t  complete -k 2 -b 2 -w 1 -r 10
 
