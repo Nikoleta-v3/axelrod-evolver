@@ -12,7 +12,7 @@ strategies = [s() for s in axelrod.strategies]
 # SCORING FUNCTION SPATIAL
 
 def ranks_for(my_strategy_factory, max_size, min_size, topology, eval_function,
-              turns = 200, repetitions=16, max_graph_attempt=500, ub_parameter=10,
+              turns=2, repetitions=1, max_graph_attempt=500, ub_parameter=10,
                                 parameter_repetitions=3, strategies=strategies):
     """
     Given a function that will return a strategy, calculate the evaluation
@@ -25,7 +25,7 @@ def ranks_for(my_strategy_factory, max_size, min_size, topology, eval_function,
     sample_size = random.randint(min_size, max_size)
     sample_strategies = random.sample(strategies, sample_size)
     sample_strategies.append(my_strategy_factory())
-    ranks =[]
+    ranks =[ ]
     for parameter in range(1, ub_parameter + 1):
 
         p = parameter/ub_parameter
@@ -33,7 +33,7 @@ def ranks_for(my_strategy_factory, max_size, min_size, topology, eval_function,
             ranking = False
             graph_seed = 0
             graph_attempt_count = 0
-            while (ranking is False):  # repeating until having connected graph
+            while ranking is False:  # repeating until having connected graph
                 G = define_topology(topology, sample_strategies, p, graph_seed)
 
                 # check that all nodes are connected
