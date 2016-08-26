@@ -14,4 +14,5 @@ export MPLBACKEND="agg"
 # Run a genetic algorithm for a binomial topology, with a bigger tournament size,
 # 15 to 50. The evaluation function is based on the median rank
 cd /home/c1569433/src/axelrod-evolver
-~/anaconda3/bin/python lookup_evovle.py -e median -m 50 -n  15 -t  binomial
+~/anaconda3/bin/python lookup_evovle.py -e median -m 50 -n  15 -t  binomial -k 2 -b 2
+
