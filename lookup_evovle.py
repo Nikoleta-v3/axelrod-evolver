@@ -154,7 +154,7 @@ if __name__ == '__main__':
     arguments = docopt(__doc__, version='Lookup Evolver 0.1')
 
     # set the output file
-    output_file = '/scratch/c1569433/data/{}_{}_evolve.csv'.format(arguments['-t'], arguments['-e'])
+    output_file = '/scratch/c1569433/data/{}_{}_{}_evolve.csv'.format(arguments['-t'], arguments['-e'], arguments['-m'])
 
     file_exists = os.path.isfile(output_file)
 
